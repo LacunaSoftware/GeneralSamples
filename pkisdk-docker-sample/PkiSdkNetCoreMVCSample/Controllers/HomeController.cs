@@ -10,8 +10,6 @@ using PkiSdkNetCoreMVCSample.Models;
 using Microsoft.AspNetCore.Hosting;
 using Lacuna.Pki;
 using Lacuna.Pki.Pades;
-using PkiSdkNetCoreMVCSample.Api.Models;
-
 
 namespace PkiSdkNetCoreMVCSample.Controllers
 {
@@ -24,7 +22,8 @@ namespace PkiSdkNetCoreMVCSample.Controllers
 		}
 
 		// Checks PKI SDK license
-		public IActionResult Index() {
+		public IActionResult Index()
+		{
 			if (!System.IO.File.Exists(Util.PkiLicensePath))
 			{
 				return View("PkiLicenseNotFound");
@@ -41,7 +40,13 @@ namespace PkiSdkNetCoreMVCSample.Controllers
 			return PadesPoliciesForGeneration.GetPadesBasic(arbitrator);
 		}
 
-		// GET: BatchSignature
+		/**
+		 * This action renders the batch signature page.
+		 *
+		 * Notice that the only thing we'll do on the server-side at this point is determine the IDs of the
+		 * documents to be signed. The page will handle each document one by one and will call the server
+		 * asynchronously to start and complete each signature.
+		 */
 		public IActionResult BatchSignature()
 		{
 			// It is up to your application's business logic to determine which documents will compose the batch
@@ -53,6 +58,58 @@ namespace PkiSdkNetCoreMVCSample.Controllers
 			return View(model);
 		}
 
+
+		/**
+		 * This controller contains the server-side logic for the optimized batch signature example.
+		 *
+		 * The logic for the example is more complex than the "regular" batch signature example (controller
+		 * BatchSignatureController), but the performance is significantly improved (roughly 50% faster).
+		 *
+		 * Notice that the optimized batch example requires a use license for the Web PKI component (every other
+		 * example in this project	does not). The licensing is not enforced when running on localhost, but in
+		 * order to run this sample outside of localhost you'll need to set a license on the web.config file.
+		 * If you need a trial license, please request one at https://www.lacunasoftware.com/en/products/web_pki
+		 */
+
+		/**
+		 * We need to persist information about each batch in progress. For simplificy purposes, we'll store
+		 * the information	about each batch on a static dictionary (server-side memory). If your application
+		 * is stateless, you should persist this information on your database instead.
+		 */
+		private class BatchInfo
+		{
+			public string Certificate { get; set; }
+		}
+		private static Dictionary<Guid, BatchInfo> batches = new Dictionary<Guid, BatchInfo>();
+
+		/**
+		 * This action is called asynchronously to initialize a batch. We'll receive the user's certificate
+		 * and store it (we'll need this information on each signature, but we'll avoid sending this
+		 * repeatedly from the view in order to increase performance).
+		 */
+		[HttpPost]
+		public IActionResult Init(BatchSignatureInitRequest request)
+		{
+			// Generate a unique ID identifying the batch.
+			var batchId = Guid.NewGuid();
+			// Store the user's certificate based on the generated ID.
+			var batchInfo = new BatchInfo()
+			{
+				Certificate = request.Certificate,
+			};
+			lock (batches)
+			{
+				batches[batchId] = batchInfo;
+			}
+
+			// Return a JSON with the batch ID (the page will use jQuery to decode this value).
+			return Json(new BatchSignatureInitResponse()
+			{
+				BatchId = batchId
+			});
+		}
+
+
 		/**
 		 * POST /BatchPadesSignatureSdk/Start
 		 * 
@@ -62,9 +119,14 @@ namespace PkiSdkNetCoreMVCSample.Controllers
 		[HttpPost]
 		public IActionResult Start(BatchSignatureStartRequest request)
 		{
+
+			// Recover the batch information based on its ID, which contains the user's certificate.
+			var batchInfo = batches[request.BatchId];
+
 			byte[] toSignBytes, transferData;
 			SignatureAlgorithm signatureAlg;
 
+			request.CertContentBase64 = batchInfo.Certificate;
 			// Decode the user's certificate
 			var cert = PKCertificate.Decode(request.CertContent);
 
@@ -72,7 +134,7 @@ namespace PkiSdkNetCoreMVCSample.Controllers
 			var padesSigner = new PadesSigner();
 
 			// Set the PDF to sign, which in the case of this example is one of the batch documents
-			padesSigner.SetPdfToSign(StorageMock.GetBatchDocPath(request.Id, _env));
+			padesSigner.SetPdfToSign(StorageMock.GetBatchDocPath(request.DocumentId, _env));
 
 			// Set the signer certificate
 			padesSigner.SetSigningCertificate(cert);
