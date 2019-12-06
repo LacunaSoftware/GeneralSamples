@@ -14,7 +14,7 @@ The built image is hosted at [dockerhub repository](https://hub.docker.com/repos
 ### Build and run image from source file
 Run the following commands in the "GeneralSamples/pkisdk-docker-sample"  directory.
 
-    docker build -f ./PkiSdkAspNetCoreMvcSample/Dockerfile --force-rm -t batchsample .
+    docker build -f ./PkiSdkNetCoreMvcSample/Dockerfile --force-rm -t batchsample .
     docker run -dt -p 49478:80 batchsample
 
 ## Program running at
