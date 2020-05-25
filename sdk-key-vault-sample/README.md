@@ -27,6 +27,8 @@ Steps to execute the sample:
 
 This project is served at https://localhost:44337/ and has two API endpoints:
 
+### Certificate Importation
+
 `POST /api/certificates/import`
 
 This action will import a PKCS#12 file to Azure Key Vault.
@@ -45,6 +47,8 @@ Response:
 	"certId": "00000000-0000-0000-0000-000000000000"
 }
 ```
+
+### Signature
 
 `POST /api/signatures`
 
