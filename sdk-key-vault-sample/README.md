@@ -20,18 +20,22 @@ you can follow the steps to create these required parameters.
 ## Execution
 
 Steps to execute the sample:
+1. [Download the project](https://github.com/LacunaSoftware/GeneralSamples/archive/master.zip) or clone the repository
+1. Open the folder of the desired project `sdk-key-vault-sample`
 1. Open the solution file (.sln) on Visual Studio
 1. Run the solution. Make sure your system allows automatic Nuget package restore (if it doesn't, manually restore the packages)
 
 This project is served at https://localhost:44337/ and has two API endpoints:
 
 `POST /api/certificates/import`
+
 This action will import a PKCS#12 file to Azure Key Vault.
 It will return a identifier for that certificate, which is necessary to retrieve that certificate in the signature action.
 This value should be stored on a database instead of return on the API.
 
 Parameters:
 | Name | Type | Mandatory | Description |
+| ---- | :--: | :-------: | :---------: |
 | pkcs12 | string | yes | The content of the PKCS#12 file |
 | pkcs12Password | string | yes | The password of the PKCS#12 file. If it doesn't have one, pass an empty string |
 
@@ -43,11 +47,13 @@ Response:
 ```
 
 `POST /api/signatures`
+
 This action will retrieve the PKCS#12 file from Azure Key Vault and perform a signature.
 It will store the signature file in the server and provided it's identifier as response.
 
 Parameters:
 | Name | Type | Mandatory | Description |
+| ---- | :--: | :-------: | :---------: |
 | certId | Guid | yes | The identifier of the certificate store on Azure Key Vault |
 | pkcs12Password | string | yes | The password of the PKCS#12 file. If it doesn't have one, pass an empty string |
 
