@@ -38,7 +38,7 @@ This value should be stored on a database instead of return on the API.
 Parameters:
 | Name | Type | Mandatory | Description |
 | ---- | :--: | :-------: | :---------: |
-| pkcs12 | string | yes | The content of the PKCS#12 file |
+| pkcs12 | string | yes | The content of the PKCS#12 file encoded in Base64 |
 | pkcs12Password | string | yes | The password of the PKCS#12 file. If it doesn't have one, pass an empty string |
 
 Response:
