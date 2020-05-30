@@ -85,7 +85,7 @@ namespace ReceituarioSimples {
 					Border = Rectangle.NO_BORDER,
 				};
 				doctorNameField.CellEvent = new TextFieldCellWrapper() {
-					FieldName = FieldName.NomeCompletoEmitente.GetValue(),
+					FieldName = "03_Nome Completo Emitente",
 					Value = nomeMedico,
 					ReadOnly = false,
 				};
@@ -156,7 +156,11 @@ namespace ReceituarioSimples {
 			// Set the generated file to be signed.
 			padesSigner.SetPdfToSign(dest);
 
-			// Provide the signer's certificate.
+			// REQUIRED!
+			// Provide the signer's certificate. You must sign with a valid digital
+			// certificate of a doctor, who was registered on CRM. In this sample,
+			// we used a sample certificate stored on server to do the execute this
+			// sample.
 			padesSigner.SetSigningCertificate(Util.GetCertificateWithKey("Alan Mathison Turing.pfx", "1234"));
 
 			// Use a policy accepted by ICP-Brasil.
@@ -174,6 +178,9 @@ namespace ReceituarioSimples {
 			var signedDocument = padesSigner.GetPadesSignature();
 			File.WriteAllBytes(dest, signedDocument);
 
+			// ********************************************************************
+			//                     Showing Signed Document
+			// ********************************************************************
 			// If you are on windows, you can uncomment the lines below to
 			// automatically open the file with the default PDF reader.
 
