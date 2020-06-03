@@ -163,8 +163,16 @@ namespace ReceituarioSimples {
 			// sample.
 			padesSigner.SetSigningCertificate(Util.GetCertificateWithKey("Alan Mathison Turing.pfx", "1234"));
 
-			// Use a policy accepted by ICP-Brasil.
-			padesSigner.SetPolicy(PadesPoliciesForGeneration.GetPadesBasic());
+			// REQUIRED!
+			// Define the trust arbitrator, which will configure the signer to 
+			// some kind of certificate. In the case of this sample, only
+			// ICP-Brasil certificates will be accepted in the defined standard.
+			var trustArbitrator = TrustArbitrators.PkiBrazil;
+
+			// REQUIRED!
+			// Use a policy accepted by ICP-Brasil. We use the trust arbitrator
+			// defined above to configure the policy.
+			padesSigner.SetPolicy(PadesPoliciesForGeneration.GetPadesBasic(trustArbitrator));
 
 			// REQUIRED!
 			// Use a custom signature field name. This field MUST have the 
