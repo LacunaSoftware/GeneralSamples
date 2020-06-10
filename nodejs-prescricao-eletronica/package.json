@@ -1,0 +1,19 @@
+{
+  "name": "prescricao-eletronica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "prescricao": "./bin/index.js"
+  },
+  "dependencies": {
+    "pdfkit": "^0.11.0",
+    "pki-express": "^1.5.1",
+    "uuid": "^8.1.0"
+  }
+}
