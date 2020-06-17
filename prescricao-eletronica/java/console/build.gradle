@@ -1,0 +1,22 @@
+plugins {
+    id 'application'
+}
+
+group 'com.lacunasoftware'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://dl.bintray.com/lacunasoftware/maven"
+    }
+}
+
+dependencies {
+    compile group: 'com.lowagie', name: 'itext', version: '4.2.0'
+    implementation 'com.lacunasoftware.pkiexpress:pki-express:1.12.0'
+}
+
+mainClassName = 'com.lacunasoftware.prescricao.Program'
