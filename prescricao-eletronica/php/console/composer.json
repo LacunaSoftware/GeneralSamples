@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "start": "php -S localhost:8000 -t public"
+  },
+  "autoload": {
+    "files": [
+      "Enum.php"
+    ]
+  },
+  "require": {
+    "tecnickcom/tcpdf": "6.3.5",
+    "lacuna/pki-express": "^1.7.0"
+  },
+  "config": {
+    "process-timeout": 0
+  }
+}
