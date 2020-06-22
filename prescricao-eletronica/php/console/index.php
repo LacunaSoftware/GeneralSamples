@@ -83,6 +83,7 @@ $signer->setPdfToSign($dest);
 $signer->setPkcs12(getcwd()."\\Alan Mathison Turing.pfx");
 $signer->setCertPassword("1234");
 $signer->setOutputFile($dest);
+$signer->setCustomSignatureFieldName("Signature1 Emitente");
 
 // Uncomment for test purpose only
 // $signer->trustLacunaTestRoot = true;
