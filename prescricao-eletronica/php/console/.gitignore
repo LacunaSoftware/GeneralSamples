@@ -1,0 +1,5 @@
+.idea/
+app-data/
+pkie/
+vendor/
+composer.lock
