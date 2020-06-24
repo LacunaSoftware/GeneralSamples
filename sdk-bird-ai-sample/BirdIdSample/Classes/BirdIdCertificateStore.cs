@@ -1,4 +1,4 @@
-﻿using Lacuna.Pki;
+using Lacuna.Pki;
 using Lacuna.Pki.Stores;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,10 @@ namespace BirdIdSample.Classes {
 
 		const string clientId = "*************";
 		const string clientSecret = "***************";
-		const string authorizationEndpoint = "https://apihom.birdid.com.br/v0";
+		const string endpoint = "https://apihom.birdid.com.br/v0";
 
 		private MemoryCertificateStore _memoryCertificateStore;
+		private List<PKCertificateWithKey> _certsWithKey;
 
 		public string Cpf { get; set; }
 		public string Otp { get; set; }
@@ -23,21 +24,32 @@ namespace BirdIdSample.Classes {
 
 		public BirdIdCertificateStore() {
 			this._memoryCertificateStore = new MemoryCertificateStore();
+			this._certsWithKey = new List<PKCertificateWithKey>();
 		}
 
-		private async Task initializeAsync(string cpf, string otp, string scope) {
-			var client = new BirdIdClient(authorizationEndpoint, clientId, clientSecret);
-			var passwordAuthorizeResponse = await client.PasswordAuthorizeAsync(cpf, otp, scope);
+		private async Task initializeAsync(string cpf, string otp) {
+			var client = new BirdIdClient(endpoint, clientId, clientSecret);
+			var passwordAuthorizeResponse = await client.PasswordAuthorizeAsync(cpf, otp, scope: "signature_session");
 			var certificateResponse = await client.GetCertificatesAsync(passwordAuthorizeResponse.AccessToken);
 
-			var certificates = certificateResponse.Certificates.Select(c => PKCertificate.Decode(c.Certificate)).ToList();
-			this._memoryCertificateStore.AddRange(certificates);
+			foreach (var certificate in certificateResponse.Certificates) {
+				var pkCertificate = PKCertificate.Decode(certificate.Certificate);
+				this._memoryCertificateStore.Add(pkCertificate);
+
+				var privateKey = new BirdIdPrivateKey() {
+					Endpoint = endpoint,
+					ClientId = clientId,
+					ClientSecret = clientSecret,
+					Alias = certificate.Alias,
+					AccessToken = passwordAuthorizeResponse.AccessToken,
+				};
+				this._certsWithKey.Add(new PKCertificateWithKey(pkCertificate, privateKey));
+			}
 		}
 
-
-		public async static Task<BirdIdCertificateStore> LoadCertificatesAsync(string cpf, string otp, string scope = "authentication_session") {
+		public async static Task<BirdIdCertificateStore> LoadCertificatesAsync(string cpf, string otp) {
 			var store = new BirdIdCertificateStore();
-			await store.initializeAsync(cpf, otp, scope);
+			await store.initializeAsync(cpf, otp);
 			return store;
 		}
 
@@ -51,6 +63,10 @@ namespace BirdIdSample.Classes {
 
 		public List<PKCertificate> GetCertificates(Name subjectName) {
 			return _memoryCertificateStore.GetCertificates(subjectName);
+		}
+
+		public List<PKCertificateWithKey> GetCertificatesWithKey() {
+			return _certsWithKey;
 		}
 	}
 }
