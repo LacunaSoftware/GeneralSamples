@@ -1,0 +1,18 @@
+label {
+	font-weight: bold;
+}
+
+.ls-content {
+	margin-top: 20px;
+}
+
+.ls-page {
+	position: fixed;
+	transition: opacity .5s, height 5s;
+}
+
+.ls-inactive {
+	opacity: 0;
+	height: 0;
+	pointer-events: none;
+}
