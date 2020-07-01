@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>PKI SDK on Electron</title>
+
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../styles/renderer.css">
+
+	<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+	<script>
+		window.$ = window.jQuery = require('jquery');
+	</script>
+	<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="../scripts/renderer.js" type="application/javascript"></script>
+</head>
+
+<body>
+	
+	<nav class="navbar navbar-expand-sm navbar-light bg-light">
+		<div class="container">
+			<a class="navbar-brand" href="#" onclick="goTo('home')">PKI SDK on Electron</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" href="#" onclick="goTo('list-certs');">List Certificates</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#" onclick="goTo('sign-pdf');">Sign a PDF</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="ls-content">
+
+			<!-- "Home" page -->
+			<div id="home" class="ls-page">
+
+				<p>Choose the following sample:</p>
+				<ul>
+					<li><a href="#" onclick="goTo('list-certs');">List certificates stored on this machine</a></li>
+					<li><a href="#" onclick="goTo('sign-pdf');">Sign a PDF</a></li>
+				</ul>
+				
+			</div>
+
+			<!-- "List Certificates" page -->
+			<div id="list-certs" class="ls-page ls-inactive">
+				<h2>List certificates stored on this machine</h2>
+
+				<div class="ls-content">
+					<form id="listCerts">
+						<div class="form-group">
+							<label for="certificateSelect">Choose one of the following certificates</label>
+							<select id="certificateSelect" class="custom-select"></select>
+						</div>
+						<button class="btn btn-outline-primary" onclick="listCertsRefreshCerts(); return false;">Refresh Certificates</button>
+					</form>
+				</div>
+			</div>
+
+			<!-- "Sign PDF" page -->
+			<div id="sign-pdf" class="ls-page ls-inactive">
+				<h2>Sign a PDF</h2>
+
+				<form id="signPdf">
+					<div class="form-group">
+						<label>File to Sign</label><br/>
+						<button role="button" class="btn btn-outline-dark" id="chooseFileBtn" onclick="signPdfChooseFile(this); return false;">Choose File</button>
+						<span> </span><span id="chosenFile"></span>
+					</div>
+					<div class="form-group">
+						<label for="certificateSelect">Choose one of the following certificates</label>
+						<select id="certificateSelect" class="custom-select"></select>
+					</div>
+					<button role="button" class="btn btn-primary" onclick="signPdf(); return false;">Sign File</button>
+					<button role="button" class="btn btn-outline-primary" onclick="signPdfRefreshCerts(); return false;">Refresh Certificates</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	
+</body>
+
+</html>
