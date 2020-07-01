@@ -23,7 +23,7 @@
 	"dependencies": {
 		"bootstrap": "^4.3.1",
 		"electron-cgi": "^0.0.2",
-		"jquery": "^1.9.1",
+		"jquery": "^3.5.0",
 		"jquery-blockui": "^2.7.0",
 		"popper.js": "^1.14.7"
 	}
