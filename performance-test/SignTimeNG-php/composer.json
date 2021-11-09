@@ -1,0 +1,15 @@
+{
+    "scripts": {
+      "start": "php index.php"
+    },
+    "autoload": {
+      "files": []
+    },
+    "require": {
+      "lacuna/restpki-client": "^2.7.0",
+      "lacuna/restpkicore-client": "^1.0.0"
+    },
+    "config": {
+      "process-timeout": 0
+    }
+  }

@@ -1,0 +1,31 @@
+{
+  "name": "lacuna/restpkicore-client",
+  "type": "library",
+  "description": "Client lib for Rest PKI Core",
+  "keywords": [
+    "lacuna",
+    "client lib",
+    "rest pki",
+    "rest pki core",
+    "signature"
+  ],
+  "authors": [
+    {
+      "name": "Emily Souza",
+      "email": "EmilyS@lacunasoftware.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "guzzlehttp/guzzle": "^6.0",
+    "lacuna/restpki-client": "^2.7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lacuna\\RestPki\\": "src/"
+    }
+  }
+}
